@@ -1,22 +1,16 @@
 package com.g_08;
 
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
-    }
-}
-
-// Property.java
-
 import java.util.*;
 
 class Player {
     String name;
     int money;
+    int position;
 
     Player(String name, int money) {
         this.name = name;
         this.money = money;
+        this.position = 0;
     }
 }
 
@@ -67,7 +61,6 @@ class PropertySpace extends BoardSpace {
     }
 
     private int calculateRent() {
-        // You can implement more complex rent calculation logic here if needed
         return rent;
     }
 }
@@ -80,8 +73,112 @@ class ChanceSpace extends BoardSpace {
     @Override
     void performAction(Player player) {
         super.performAction(player);
-        // Implement chance action, e.g., draw a chance card
-        System.out.println("Drawing a chance card for " + player.name);
+        drawChanceCard(player);
+    }
+
+    private void drawChanceCard(Player player) {
+        int cardNumber = (int) (Math.random() * 10) + 1;
+
+        switch (cardNumber) {
+            case 1:
+                giveCardToCar(player);
+                break;
+            case 2:
+                moveToStart(player);
+                break;
+            case 3:
+                moveUpToFiveSpaces(player);
+                break;
+            case 4:
+                moveUpToThreeSpaces(player);
+                break;
+            case 5:
+                moveOneSpaceOrExtraCard(player);
+                break;
+            case 6:
+                giveCardToShip(player);
+                break;
+            case 7:
+            case 8:
+            case 9:
+                goToJail(player);
+                break;
+            case 10:
+                breakOutOfJail(player);
+                break;
+            case 11:
+                getMoneyForHouses(player);
+                break;
+        }
+    }
+
+    private void giveCardToCar(Player player) {
+        System.out.println("Give this card to the Car and take an extra chance card.");
+        drawChanceCard(player);
+    }
+
+    private void moveToStart(Player player) {
+        System.out.println("Move to Start and get $2.");
+        player.money += 2;
+        player.position = 0;
+        // Assume board is a static variable
+        board.getSpace(player.position).performAction(player);
+    }
+
+    private void moveUpToFiveSpaces(Player player) {
+        int spaces = (int) (Math.random() * 5) + 1;
+        System.out.println("Move up to " + spaces + " spaces forward.");
+        player.position = (player.position + spaces) % board.spaces.size();
+        board.getSpace(player.position).performAction(player);
+    }
+
+    private void moveUpToThreeSpaces(Player player) {
+        int spaces = (int) (Math.random() * 3) + 1;
+        System.out.println("Move up to " + spaces + " spaces forward.");
+        int newPosition = (player.position + spaces) % board.spaces.size();
+        if (board.getSpace(newPosition) instanceof PropertySpace) {
+            PropertySpace property = (PropertySpace) board.getSpace(newPosition);
+            if (property.owner == null) {
+                System.out.println("You get it for free!");
+                property.owner = player;
+            } else {
+                System.out.println("Someone owns it, you have to pay the owner.");
+                property.payRent(player);
+            }
+        }
+        player.position = newPosition;
+    }
+
+    private void moveOneSpaceOrExtraCard(Player player) {
+        int choice = (int) (Math.random() * 2);
+        if (choice == 0) {
+            System.out.println("Move one space forward.");
+            player.position = (player.position + 1) % board.spaces.size();
+            board.getSpace(player.position).performAction(player);
+        } else {
+            System.out.println("Take an extra chance card.");
+            drawChanceCard(player);
+        }
+    }
+
+    private void giveCardToShip(Player player) {
+        System.out.println("Give this card to the Ship and take an extra chance card.");
+        drawChanceCard(player);
+    }
+
+    private void goToJail(Player player) {
+        System.out.println("Go to Jail!");
+        player.position = board.spaces.indexOf(board.spaces.stream().filter(space -> space instanceof JailSpace).findFirst().orElse(null));
+        board.getSpace(player.position).performAction(player);
+    }
+
+    private void breakOutOfJail(Player player) {
+        System.out.println("Break out of Jail!");
+    }
+
+    private void getMoneyForHouses(Player player) {
+        System.out.println("Your houses have been making that mulla, get $10 free!");
+        player.money += 10;
     }
 }
 
@@ -113,7 +210,6 @@ class JailSpace extends BoardSpace {
     void performAction(Player player) {
         super.performAction(player);
         System.out.println(player.name + " is in jail");
-        // You can add more logic related to being in jail if needed
     }
 }
 
@@ -126,7 +222,6 @@ class VisitJailSpace extends BoardSpace {
     void performAction(Player player) {
         super.performAction(player);
         System.out.println(player.name + " visited the jail");
-        // You can add more logic related to visiting the jail if needed
     }
 }
 
@@ -139,7 +234,6 @@ class FreeParkingSpace extends BoardSpace {
     void performAction(Player player) {
         super.performAction(player);
         System.out.println(player.name + " is in Free Parking");
-        // You can add more logic related to Free Parking if needed
     }
 }
 
@@ -152,7 +246,8 @@ class GoToJailSpace extends BoardSpace {
     void performAction(Player player) {
         super.performAction(player);
         System.out.println(player.name + " goes to jail!");
-        // You can add more logic related to going to jail if needed
+        player.position = board.spaces.indexOf(board.spaces.stream().filter(space -> space instanceof JailSpace).findFirst().orElse(null));
+        board.getSpace(player.position).performAction(player);
     }
 }
 
@@ -175,48 +270,61 @@ class MonopolyBoard {
     }
 }
 
-class MonopolyGame {
-    List<Player> players;
-    MonopolyBoard board;
+public class MonopolyGame {
+    private List<Player> players;
+    private static MonopolyBoard board;
 
-    MonopolyGame() {
+    public MonopolyGame() {
         players = new ArrayList<>();
+        // Initialize the Monopoly board
         board = new MonopolyBoard(
                 List.of(
                         new StartSpace("Start"),
-                        new PropertySpace("GATEKJØKKENET BURGERBAREN", 1, 2),
-                        new PropertySpace("PIZZAHUSET PIZZERIAET", 1, 2),
+                        new PropertySpace("CRACKDEN", 1, 2),
+                        new PropertySpace("GUNSTORE", 1, 2),
                         new ChanceSpace("Chance"),
-                        new PropertySpace("GODTEBUTIKKEN SLIKBUTIKKEN", 1, 2),
-                        new PropertySpace("ISKIOSKEN ISKIOSKEN", 1, 2),
+                        new PropertySpace("HENNY BULLOVARD", 1, 2),
+                        new PropertySpace("WHOREHOUSE", 1, 2),
                         new JailSpace("Jail/VISIT JAIL"),
-                        new PropertySpace("MUSEET MUSEET", 2, 4),
-                        new PropertySpace("BIBLIOTEKET", 2, 4),
+                        new PropertySpace("CORNER STORE", 2, 4),
+                        new PropertySpace("BRITNEYS PLACE", 2, 4),
                         new ChanceSpace("Chance"),
-                        new PropertySpace("RULLEBRETTPARKEN SKATERPARKEN", 2, 4),
-                        new PropertySpace("SVØMMEBASSENGET SWIMMINGPOOLEN", 2, 4),
+                        new PropertySpace("GRAVEYARD", 2, 4),
+                        new PropertySpace("DICE CORNER", 2, 4),
                         new FreeParkingSpace("Free Parking"),
-                        new PropertySpace("SPILLEHALLEN SPILLEHALLEN", 3, 6),
-                        new PropertySpace("KINOEN BIOGRAFEN", 3, 6),
+                        new PropertySpace("GANGSTER GEAR", 3, 6),
+                        new PropertySpace("TYRONES FUN PALACE", 3, 6),
                         new ChanceSpace("Chance"),
-                        new PropertySpace("LEKETØYSBUTIKKEN LEGETØJSBUTIKKEN", 3, 6),
-                        new PropertySpace("DYREBUTIKKEN DYREHANDLEN", 3, 6),
+                        new PropertySpace("KFC STORE", 3, 6),
+                        new PropertySpace("JOHNNY THE DEALERS SPOT", 3, 6),
                         new GoToJailSpace("Go to Jail"),
-                        new PropertySpace("BOWLINGHALLEN BOWLINGHALLEN", 4, 8),
-                        new PropertySpace("ZOOLOGISK HAGE ZOO", 4, 8),
+                        new PropertySpace("BOOZE STORE", 4, 8),
+                        new PropertySpace("DRIVE BY ALLEY", 4, 8),
                         new ChanceSpace("Chance"),
-                        new PropertySpace("VANNLANDET VANDLANDET", 5, 10),
-                        new PropertySpace("STRANDPROMENADEN STRANDPROMENADEN", 5, 10)
+                        new PropertySpace("POST OFFICE", 5, 10),
+                        new PropertySpace("COMPTON STATION", 5, 10)
                 )
         );
     }
 
-    void initializeGame() {
+    public void initializeGame() {
         // Add players
-        players.add(new Player("Player 1", 20));
-        players.add(new Player("Player 2", 20));
-        players.add(new Player("Player 3", 20));
-        players.add(new Player("Player 4", 20));
+        players.add(new Player("Pimp", 20));
+        players.add(new Player("Hoe", 20));
+        players.add(new Player("Junkie", 20));
+        players.add(new Player("Officerjim", 20));
+    }
+
+    boolean hasProperties(Player player) {
+        for (BoardSpace space : board.spaces) {
+            if (space instanceof PropertySpace) {
+                PropertySpace property = (PropertySpace) space;
+                if (property.owner == player) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     void playGame() {
@@ -225,8 +333,9 @@ class MonopolyGame {
         // Game loop
         Scanner scanner = new Scanner(System.in);
 
-        while (true) {
-            for (Player currentPlayer : players) {
+        while (players.size() > 1) {
+            for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+                Player currentPlayer = iterator.next();
                 System.out.println("\n" + currentPlayer.name + "'s turn");
 
                 // Display available options
@@ -242,11 +351,26 @@ class MonopolyGame {
                         System.out.println(currentPlayer.name + " rolled a " + diceRoll);
 
                         // Calculate the new position on the board
-                        int currentPosition = players.indexOf(currentPlayer);
+                        int currentPosition = currentPlayer.position;
                         int newPosition = (currentPosition + diceRoll) % board.spaces.size();
 
                         // Perform the action on the new board space
                         board.getSpace(newPosition).performAction(currentPlayer);
+                        currentPlayer.position = newPosition; // Update player's position
+
+                        // Simulate rent payment
+                        for (BoardSpace space : board.spaces) {
+                            if (space instanceof PropertySpace) {
+                                PropertySpace property = (PropertySpace) space;
+                                property.payRent(currentPlayer);
+                            }
+                        }
+
+                        // Check if the player is out of the game
+                        if (currentPlayer.money <= 0 || !hasProperties(currentPlayer)) {
+                            System.out.println(currentPlayer.name + " is out of the game!");
+                            iterator.remove(); // Remove the player from the game
+                        }
                         break;
 
                     case 2:
@@ -256,20 +380,18 @@ class MonopolyGame {
                     default:
                         System.out.println("Invalid choice");
                 }
-
-                // Simulate rent payment
-                for (BoardSpace space : board.spaces) {
-                    if (space instanceof PropertySpace) {
-                        PropertySpace property = (PropertySpace) space;
-                        property.payRent(currentPlayer);
-                    }
-                }
             }
         }
-    }
-}
 
-public class Property {
+        // Declare the winner
+        if (!players.isEmpty()) {
+            Player winner = players.get(0);
+            System.out.println(winner.name + " wins the game!");
+        } else {
+            System.out.println("No winner. The game ended in a draw.");
+        }
+    }
+
     public static void main(String[] args) {
         MonopolyGame game = new MonopolyGame();
         game.playGame();
