@@ -1,4 +1,4 @@
-package com.g_08;
+package cdio3.src.main.java.com.g_08;
 
 import java.util.*;
 
@@ -66,6 +66,8 @@ class PropertySpace extends BoardSpace {
 }
 
 class ChanceSpace extends BoardSpace {
+    private MonopolyBoard board;
+
     ChanceSpace(String name) {
         super(name);
     }
@@ -83,6 +85,7 @@ class ChanceSpace extends BoardSpace {
             case 1:
                 giveCardToCar(player);
                 break;
+
             case 2:
                 moveToStart(player);
                 break;
@@ -121,7 +124,6 @@ class ChanceSpace extends BoardSpace {
         System.out.println("Move to Start and get $2.");
         player.money += 2;
         player.position = 0;
-        // Assume board is a static variable
         board.getSpace(player.position).performAction(player);
     }
 
@@ -238,6 +240,8 @@ class FreeParkingSpace extends BoardSpace {
 }
 
 class GoToJailSpace extends BoardSpace {
+    private MonopolyBoard board;
+
     GoToJailSpace(String name) {
         super(name);
     }
@@ -272,7 +276,7 @@ class MonopolyBoard {
 
 public class MonopolyGame {
     private List<Player> players;
-    private static MonopolyBoard board;
+    private MonopolyBoard board;
 
     public MonopolyGame() {
         players = new ArrayList<>();
@@ -390,6 +394,7 @@ public class MonopolyGame {
         } else {
             System.out.println("No winner. The game ended in a draw.");
         }
+        scanner.close();
     }
 
     public static void main(String[] args) {
