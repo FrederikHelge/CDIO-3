@@ -1,4 +1,4 @@
-package cdio3.src.main.java.com.g_08;
+package com.g_08;
 
 import java.util.*;
 
