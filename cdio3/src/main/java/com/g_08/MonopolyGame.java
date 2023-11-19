@@ -288,7 +288,7 @@ public class MonopolyGame {
                         new PropertySpace("GUNSTORE", 1, 2),
                         new ChanceSpace("Chance"),
                         new PropertySpace("HENNY BULLOVARD", 1, 2),
-                        new PropertySpace("WHOREHOUSE", 1, 2),
+                        new PropertySpace("REDLIGHT DISTRICT", 1, 2),
                         new JailSpace("Jail/VISIT JAIL"),
                         new PropertySpace("CORNER STORE", 2, 4),
                         new PropertySpace("BRITNEYS PLACE", 2, 4),
