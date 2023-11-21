@@ -8,6 +8,7 @@ class Player {
     int position;
     boolean inJail;
     int turnsInJail;
+    int breakoutofjailcards;
 
 
     Player(String name, int money) {
@@ -16,6 +17,7 @@ class Player {
         this.position = 0;
         this.inJail=false;
         this.turnsInJail=0;
+        this.breakoutofjailcards=0;
     }
 
     boolean isInJail(){
@@ -36,6 +38,9 @@ class Player {
 
     void resetTurnsInJail(){
         turnsInJail=0;
+    }
+    int getBreakOutOfJailCards(){
+        return breakoutofjailcards;
     }
     
 }
@@ -214,7 +219,8 @@ class ChanceSpace extends BoardSpace {
     }
 
     private void breakOutOfJail(Player player) {
-        System.out.println("Break out of Jail!");
+        System.out.println("You found a tool to escape the jail... Better keep it hidden");
+        player.breakoutofjailcards++;
     }
 
     private void getMoneyForHouses(Player player) {
@@ -296,9 +302,16 @@ class GoToJailSpace extends BoardSpace {
     void performAction(Player player) {
         super.performAction(player);
         System.out.println(player.name + " goes to jail!");
+        if(player.getBreakOutOfJailCards()>0){
+            player.position=board.getJailPosition();
+            player.breakoutofjailcards--;
+            System.out.println("You used your tool from earlier and escaped the jail");
+        } else {
+
         player.position = board.getJailPosition();
         player.enterJail();
         board.getSpace(player.position).performAction(player);
+        }
     }
 }
 
