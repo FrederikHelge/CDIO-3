@@ -62,7 +62,7 @@ class PropertySpace extends BoardSpace {
                 System.out.println(player.name + " decided not to buy " + name);
             }
 
-        } else if (owner != null && owner != player) {
+        } else if (owner != null && !owner.equals(player)) {
             player.money -= rent;
             owner.money += rent;
             System.out.println(player.name + " paid $" + rent + " rent to " + owner.name);
