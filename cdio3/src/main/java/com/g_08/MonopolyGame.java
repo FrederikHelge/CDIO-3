@@ -297,6 +297,7 @@ class GoToJailSpace extends BoardSpace {
         super.performAction(player);
         System.out.println(player.name + " goes to jail!");
         player.position = board.getJailPosition();
+        player.enterJail();
         board.getSpace(player.position).performAction(player);
     }
 }
