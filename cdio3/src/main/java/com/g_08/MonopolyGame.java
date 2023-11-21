@@ -407,7 +407,11 @@ public class MonopolyGame {
                             System.out.println(currentPlayer.name + " is out of the game!");
                             iterator.remove(); // Remove the player from the game
                         }
+                        
+                        System.out.println(currentPlayer.name + " has $" + currentPlayer.money);
                         break;
+                        
+
 
                     case 2:
                         // End turn
