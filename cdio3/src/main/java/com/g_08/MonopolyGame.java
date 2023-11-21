@@ -250,7 +250,6 @@ class JailSpace extends BoardSpace {
     @Override
     void performAction(Player player) {
         super.performAction(player);
-        System.out.println(player.name + " is in jail");
         if(player.isInJail()){
             player.turnsInJail++;
             if(player.getTurnsInJail()==2){
