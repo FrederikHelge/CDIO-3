@@ -86,8 +86,9 @@ class PropertySpace extends BoardSpace {
 class ChanceSpace extends BoardSpace {
     private MonopolyBoard board;
 
-    ChanceSpace(String name) {
+    ChanceSpace(String name, MonopolyBoard board) {
         super(name);
+        this.board = board;
     }
 
     @Override
@@ -102,6 +103,7 @@ class ChanceSpace extends BoardSpace {
         switch (cardNumber) {
             case 1:
                 moveUpToThreeSpaces(player);
+                break;
             case 2:
                 moveToStart(player);
                 break;
@@ -293,25 +295,25 @@ public class MonopolyGame {
                         new StartSpace("Start"),
                         new PropertySpace("CRACKDEN", 1, 2),
                         new PropertySpace("GUNSTORE", 1, 2),
-                        new ChanceSpace("Chance"),
+                        new ChanceSpace("Chance", board),
                         new PropertySpace("HENNY BULLOVARD", 1, 2),
                         new PropertySpace("REDLIGHT DISTRICT", 1, 2),
                         new JailSpace("Jail/VISIT JAIL"),
                         new PropertySpace("CORNER STORE", 2, 4),
                         new PropertySpace("BRITNEYS PLACE", 2, 4),
-                        new ChanceSpace("Chance"),
+                        new ChanceSpace("Chance", board),
                         new PropertySpace("GRAVEYARD", 2, 4),
                         new PropertySpace("DICE CORNER", 2, 4),
                         new FreeParkingSpace("Free Parking"),
                         new PropertySpace("GANGSTER GEAR", 3, 6),
                         new PropertySpace("THE FUN PALACE", 3, 6),
-                        new ChanceSpace("Chance"),
+                        new ChanceSpace("Chance", board),
                         new PropertySpace("Univisity of New York", 3, 6),
                         new PropertySpace("JOHNNY THE DEALERS SPOT", 3, 6),
                         new GoToJailSpace("Go to Jail"),
                         new PropertySpace("BOOZE STORE", 4, 8),
                         new PropertySpace("DRIVE BY ALLEY", 4, 8),
-                        new ChanceSpace("Chance"),
+                        new ChanceSpace("Chance", board),
                         new PropertySpace("POST OFFICE", 5, 10),
                         new PropertySpace("COMPTON STATION", 5, 10)
                 )
