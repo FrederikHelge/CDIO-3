@@ -389,7 +389,7 @@ public class MonopolyGame {
                         currentPlayer.position = newPosition; // Update player's position1
 
                         // Check if the player is out of the game
-                        if (currentPlayer.money <= 0 || !hasProperties(currentPlayer)) {
+                        if (currentPlayer.money <= 0) {
                             System.out.println(currentPlayer.name + " is out of the game!");
                             iterator.remove(); // Remove the player from the game
                         }
