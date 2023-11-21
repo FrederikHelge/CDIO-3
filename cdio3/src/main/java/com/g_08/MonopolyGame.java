@@ -54,7 +54,7 @@ class PropertySpace extends BoardSpace {
             } else {
                 System.out.println(player.name + " decided not to buy " + name);
             }
-            
+
             buyChoice.close();
 
         } else if (owner != null && owner != player) {
@@ -359,7 +359,15 @@ public class MonopolyGame {
                 System.out.println("1. Roll Dice");
                 System.out.println("2. End Turn");
 
-                int choice = scanner.nextInt();
+                int choice;
+
+                try {
+                    choice = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a number");
+                    scanner.next();
+                    continue;
+                }
 
                 switch (choice) {
                     case 1:
