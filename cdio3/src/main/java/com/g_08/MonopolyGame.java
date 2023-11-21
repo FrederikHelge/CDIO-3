@@ -91,6 +91,10 @@ class ChanceSpace extends BoardSpace {
         this.board = board;
     }
 
+    void setBoard(MonopolyBoard board) {
+        this.board = board;
+    }
+
     @Override
     void performAction(Player player) {
         super.performAction(player);
@@ -167,6 +171,7 @@ class ChanceSpace extends BoardSpace {
 
     private void moveOneSpaceOrExtraCard(Player player) {
         int choice = (int) (Math.random() * 2);
+
         if (choice == 0) {
             System.out.println("Move one space forward.");
             player.position = (player.position + 1) % board.spaces.size();
@@ -318,6 +323,13 @@ public class MonopolyGame {
                         new PropertySpace("COMPTON STATION", 5, 10)
                 )
         );
+
+        for (BoardSpace space : board.spaces) {
+            if (space instanceof ChanceSpace) {
+                ((ChanceSpace) space).setBoard(board);
+            }
+        }
+
     }
 
     public void initializeGame() {
