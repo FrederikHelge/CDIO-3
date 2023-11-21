@@ -41,9 +41,22 @@ class PropertySpace extends BoardSpace {
     void performAction(Player player) {
         super.performAction(player);
         if (owner == null && player.money >= cost) {
-            owner = player;
-            player.money -= cost;
-            System.out.println(player.name + " bought " + name + " for $" + cost);
+            System.out.println("Property not owned: " + name);
+            System.out.println("Do you wish to buy the property for $" + cost + "?(1: Yes, 2: No)");
+
+            var buyChoice = new Scanner(System.in);
+            int buyDecision = buyChoice.nextInt();
+
+            if(buyDecision==1){
+                owner = player;
+                player.money -= cost;
+                System.out.println(player.name + " bought " + name + " for $" + cost); 
+            } else {
+                System.out.println(player.name + " decided not to buy " + name);
+            }
+            
+            buyChoice.close();
+
         } else if (owner != null && owner != player) {
             player.money -= rent;
             owner.money += rent;
