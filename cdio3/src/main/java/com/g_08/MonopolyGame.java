@@ -386,15 +386,7 @@ public class MonopolyGame {
 
                         // Perform the action on the new board space
                         board.getSpace(newPosition).performAction(currentPlayer);
-                        currentPlayer.position = newPosition; // Update player's position
-
-                        // Simulate rent payment
-                        for (BoardSpace space : board.spaces) {
-                            if (space instanceof PropertySpace) {
-                                PropertySpace property = (PropertySpace) space;
-                                property.payRent(currentPlayer);
-                            }
-                        }
+                        currentPlayer.position = newPosition; // Update player's position1
 
                         // Check if the player is out of the game
                         if (currentPlayer.money <= 0 || !hasProperties(currentPlayer)) {
