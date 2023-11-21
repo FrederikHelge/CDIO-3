@@ -6,12 +6,38 @@ class Player {
     String name;
     int money;
     int position;
+    boolean inJail;
+    int turnsInJail;
+
 
     Player(String name, int money) {
         this.name = name;
         this.money = money;
         this.position = 0;
+        this.inJail=false;
+        this.turnsInJail=0;
     }
+
+    boolean isInJail(){
+        return inJail;
+    }
+
+    void enterJail(){
+        inJail=true;
+    }
+
+    void exitJail(){
+        inJail=false;
+    }
+
+    int getTurnsInJail(){
+        return turnsInJail;
+    }
+
+    void resetTurnsInJail(){
+        turnsInJail=0;
+    }
+    
 }
 
 class BoardSpace {
@@ -184,7 +210,7 @@ class ChanceSpace extends BoardSpace {
 
     private void goToJail(Player player) {
         System.out.println("Go to Jail!");
-        player.position = board.spaces.indexOf(board.spaces.stream().filter(space -> space instanceof JailSpace).findFirst().orElse(null));
+        player.position = board.getJailPosition();
         board.getSpace(player.position).performAction(player);
     }
 
@@ -226,6 +252,19 @@ class JailSpace extends BoardSpace {
     void performAction(Player player) {
         super.performAction(player);
         System.out.println(player.name + " is in jail");
+        if(player.isInJail()){
+            player.turnsInJail++;
+            if(player.getTurnsInJail()==2){
+                player.exitJail();
+                player.resetTurnsInJail();
+                System.out.println(player.name + " has served his sentence and has left the jail");
+            } else{
+                player.enterJail();
+                System.out.println(player.name + " has been sent to jail for grave crimes");
+            }
+        }
+
+        
     }
 }
 
@@ -269,16 +308,18 @@ class GoToJailSpace extends BoardSpace {
     void performAction(Player player) {
         super.performAction(player);
         System.out.println(player.name + " goes to jail!");
-        player.position = board.spaces.indexOf(board.spaces.stream().filter(space -> space instanceof JailSpace).findFirst().orElse(null));
+        player.position = board.getJailPosition();
         board.getSpace(player.position).performAction(player);
     }
 }
 
 class MonopolyBoard {
     List<BoardSpace> spaces;
+    private int jailposition;
 
     MonopolyBoard(List<BoardSpace> spaces) {
         this.spaces = spaces;
+        this.jailposition=6;
     }
 
     void displayBoard() {
@@ -291,6 +332,10 @@ class MonopolyBoard {
     BoardSpace getSpace(int index) {
         return spaces.get(index);
     }
+    int getJailPosition(){
+        return jailposition;
+    }
+
 }
 
 public class MonopolyGame {
