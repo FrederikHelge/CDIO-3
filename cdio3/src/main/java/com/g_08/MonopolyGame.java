@@ -101,9 +101,7 @@ class ChanceSpace extends BoardSpace {
 
         switch (cardNumber) {
             case 1:
-                giveCardToCar(player);
-                break;
-
+                moveUpToThreeSpaces(player);
             case 2:
                 moveToStart(player);
                 break;
@@ -117,25 +115,21 @@ class ChanceSpace extends BoardSpace {
                 moveOneSpaceOrExtraCard(player);
                 break;
             case 6:
-                giveCardToShip(player);
+                getMoneyForHouses(player);
                 break;
             case 7:
+                moveUpToFiveSpaces(player);
+                break;
             case 8:
+                moveToStart(player);
+                break;
             case 9:
                 goToJail(player);
                 break;
             case 10:
                 breakOutOfJail(player);
                 break;
-            case 11:
-                getMoneyForHouses(player);
-                break;
         }
-    }
-
-    private void giveCardToCar(Player player) {
-        System.out.println("Give this card to the Car and take an extra chance card.");
-        drawChanceCard(player);
     }
 
     private void moveToStart(Player player) {
@@ -179,11 +173,6 @@ class ChanceSpace extends BoardSpace {
             System.out.println("Take an extra chance card.");
             drawChanceCard(player);
         }
-    }
-
-    private void giveCardToShip(Player player) {
-        System.out.println("Give this card to the Ship and take an extra chance card.");
-        drawChanceCard(player);
     }
 
     private void goToJail(Player player) {
