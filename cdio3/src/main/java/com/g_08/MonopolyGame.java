@@ -166,7 +166,6 @@ class ChanceSpace extends BoardSpace {
 
     private void moveToStart(Player player) {
         System.out.println("Move to Start and get $2.");
-        player.money += 2;
         player.position = 0;
         board.getSpace(player.position).performAction(player);
     }
@@ -259,24 +258,14 @@ class JailSpace extends BoardSpace {
                 player.resetTurnsInJail();
                 System.out.println(player.name + " has served his sentence and has left the jail");
             } else{
-                player.enterJail();
-                System.out.println(player.name + " has been sent to jail for grave crimes");
+                System.out.println(player.name + " is still in jail");
             }
+        } else {
+            System.out.println(player.name + " visited the jail");
         }
+        
 
         
-    }
-}
-
-class VisitJailSpace extends BoardSpace {
-    VisitJailSpace(String name) {
-        super(name);
-    }
-
-    @Override
-    void performAction(Player player) {
-        super.performAction(player);
-        System.out.println(player.name + " visited the jail");
     }
 }
 
@@ -363,7 +352,7 @@ public class MonopolyGame {
                         new PropertySpace("GANGSTER GEAR", 3, 6),
                         new PropertySpace("THE FUN PALACE", 3, 6),
                         new ChanceSpace("Chance", board),
-                        new PropertySpace("Univisity of New York", 3, 6),
+                        new PropertySpace("Univirsity of New York", 3, 6),
                         new PropertySpace("JOHNNY THE DEALERS SPOT", 3, 6),
                         new GoToJailSpace("Go to Jail", board),
                         new PropertySpace("BOOZE STORE", 4, 8),
@@ -435,6 +424,29 @@ public class MonopolyGame {
 
                 switch (choice) {
                     case 1:
+
+                        if (currentPlayer.isInJail()){
+                            int jaildice = (int) (Math.random() * 6) + 1;
+                            System.out.println(currentPlayer.name + " rolled a " + jaildice);
+
+                            if(jaildice==6){
+                                currentPlayer.exitJail();
+                                currentPlayer.resetTurnsInJail();
+                                System.out.println(currentPlayer.name + " has left jail early because of their good behavior");
+                            } else {
+                                currentPlayer.turnsInJail++;
+                                if (currentPlayer.getTurnsInJail()==2){
+                                    currentPlayer.exitJail();
+                                    currentPlayer.resetTurnsInJail();
+                                    System.out.println(currentPlayer.name + " has served their sentence and has has been released");
+                                } else {
+                                    System.out.println(currentPlayer.name + " is still in jail");
+                                }
+
+                            }
+
+                        } else {
+
                         // Simulate dice roll
                         int diceRoll = (int) (Math.random() * 6) + 1;
                         System.out.println(currentPlayer.name + " rolled a " + diceRoll);
@@ -455,7 +467,7 @@ public class MonopolyGame {
                         
                         System.out.println(currentPlayer.name + " has $" + currentPlayer.money);
                         break;
-                        
+                        }
 
 
                     case 2:
