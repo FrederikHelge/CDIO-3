@@ -45,7 +45,14 @@ class PropertySpace extends BoardSpace {
             System.out.println("Do you wish to buy the property for $" + cost + "?(1: Yes, 2: No)");
 
             var buyChoice = new Scanner(System.in);
-            int buyDecision = buyChoice.nextInt();
+            int buyDecision = 0;
+
+            try{
+                buyDecision = buyChoice.nextInt();
+            } catch (InputMismatchException e){
+                System.out.println("Invalid input. Please enter a number");
+                buyChoice.next();
+            }
 
             if(buyDecision==1){
                 owner = player;
