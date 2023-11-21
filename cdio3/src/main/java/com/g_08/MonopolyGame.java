@@ -256,8 +256,13 @@ class FreeParkingSpace extends BoardSpace {
 class GoToJailSpace extends BoardSpace {
     private MonopolyBoard board;
 
-    GoToJailSpace(String name) {
+    GoToJailSpace(String name, MonopolyBoard board) {
         super(name);
+        this.board = board;
+    }
+
+    void setBoard(MonopolyBoard board){
+        this.board=board;
     }
 
     @Override
@@ -315,7 +320,7 @@ public class MonopolyGame {
                         new ChanceSpace("Chance", board),
                         new PropertySpace("Univisity of New York", 3, 6),
                         new PropertySpace("JOHNNY THE DEALERS SPOT", 3, 6),
-                        new GoToJailSpace("Go to Jail"),
+                        new GoToJailSpace("Go to Jail", board),
                         new PropertySpace("BOOZE STORE", 4, 8),
                         new PropertySpace("DRIVE BY ALLEY", 4, 8),
                         new ChanceSpace("Chance", board),
@@ -327,6 +332,12 @@ public class MonopolyGame {
         for (BoardSpace space : board.spaces) {
             if (space instanceof ChanceSpace) {
                 ((ChanceSpace) space).setBoard(board);
+            }
+        }
+
+        for (BoardSpace space : board.spaces) {
+            if (space instanceof GoToJailSpace) {
+                ((GoToJailSpace) space).setBoard(board);
             }
         }
 
