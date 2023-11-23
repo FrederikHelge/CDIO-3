@@ -24,15 +24,6 @@ public class MonopolyGameTest {
     }
 
     @Test
-    public void testHasProperties() {
-        MonopolyGame game = new MonopolyGame();
-        List<Player> players = new ArrayList<>(game.getPlayers());
-        
-        players.add(new Player("TestPlayer", 100));
-        
-    }
-
-    @Test
     public void testPayRent(){
         Player owner = new Player("Owner", 10);
         Player visitor = new Player("Visitor", 10);
