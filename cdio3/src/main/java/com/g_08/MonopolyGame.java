@@ -331,6 +331,15 @@ public class MonopolyGame {
         return false;
     }
 
+    List<Player> getPlayers() {
+        return players;
+    }
+
+    MonopolyBoard getBoard() {
+        return board;
+    }
+
+
     void playGame() {
         initializeGame();
 
